@@ -1,0 +1,14 @@
+---
+- name: install required software
+  hosts: slave
+  become: true
+  tasks:
+    - name: install the script
+      copy:
+        src: "/home/keerthi/capstone/capstone1/scripts/software.sh"
+        dest: "{{ ansible_env.HOME }}/software.sh"
+        mode: 0755
+
+
+    - name: run the installation script
+      command: "{{ ansible_env.HOME }}/software.sh"
