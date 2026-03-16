@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "capstonedocker"
+        CONTAINER_NAME = "capstonetest"
+    }
+
+    stages {
+        stage('build') {
+            steps {
+                echo "Building Docker image..."
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
+        stage('test') {
+            steps {
+                echo "Testing website container..."
+                sh '''
+                    docker rm -f website-test || true
+                    docker run -d --name website-test -p 8081:80 $IMAGE_NAME
+                    sleep 10
+                    curl -f http://localhost:8081
+                    docker rm -f website-test
+                '''
+            }
+        }
+
+        stage('prod') {
+            when {
+                branch 'master'
+            }
+            steps {
+                echo "Deploying to production..."
+                sh '''
+                    docker rm -f $CONTAINER_NAME || true
+                    docker run -d --name $CONTAINER_NAME -p 80:80 $IMAGE_NAME
+                '''
+            }
+        }
+    }
+}
