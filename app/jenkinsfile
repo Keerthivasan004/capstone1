@@ -21,7 +21,7 @@ pipeline {
                     docker rm -f website-test || true
                     docker run -d --name website-test -p 8081:80 $IMAGE_NAME
                     sleep 10
-                    curl -f http://4.186.29.41:8081
+                    curl -f http://localhost:8081
                     docker rm -f website-test
                 '''
             }
