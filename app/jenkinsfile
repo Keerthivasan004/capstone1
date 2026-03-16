@@ -18,7 +18,7 @@ pipeline {
             steps {
                 echo "Testing website container..."
                 sh '''
-                    docker rm -f website-test || true
+                    docker rm -f capstonetest || true
                     docker run -d --name capstonetest -p 8081:80 $IMAGE_NAME
                     sleep 10
                     curl -f http://localhost:8081
